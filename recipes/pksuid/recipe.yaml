@@ -33,7 +33,7 @@ build:
 requirements:
   host:
     - python ${{ python_min }}.*
-    - poetry-core
+    - poetry-core >=1.0.0
     - pip
   run:
     - python >=${{ python_min }}
