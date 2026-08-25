@@ -20,7 +20,8 @@ source:
     # so that only happens for timestamps before Nov 2014, where 0.4.3 was
     # already broken (it dropped the leading zero and parse raised on the short
     # uid). Every ID from 2015 onward encodes byte for byte identically under
-    # both, so IDs stay interchangeable with pip installed pksuid.
+    # both, so IDs stay interchangeable with pip installed pksuid. run_test.py
+    # locks that in by re-encoding a reference ID generated with 0.4.3.
     # Upstream last released in May 2022 and has no open issues or PRs, so do
     # not expect this to be fixed upstream; drop the patch if it ever is.
     - patches/0001-loosen-pybase62-pin.patch
@@ -47,6 +48,16 @@ tests:
       python_version:
         - ${{ python_min }}.*
         - "*"
+  # Upstream excludes its test suite from the sdist, so this covers the same
+  # ground: generation, parse round trip, the reference ID format check that
+  # backs the pybase62 patch, timestamps, ordering and the error paths.
+  - script: python run_test.py
+    files:
+      recipe:
+        - run_test.py
+    requirements:
+      run:
+        - python ${{ python_min }}.*
 
 about:
   homepage: https://github.com/sashahilton00/python-pksuid
